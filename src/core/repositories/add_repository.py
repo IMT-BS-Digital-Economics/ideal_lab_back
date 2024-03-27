@@ -9,8 +9,6 @@
 
 """
 from datetime import datetime
-from os import path
-from sys import executable
 
 from src.core.utils.handle_system_execution import run_command
 
@@ -25,42 +23,6 @@ def clone_repository(username: str, token: str, repository_name: str):
     """
 
     run_command(f'git clone https://{username}:{token}@github.com/{repository_name}.git')
-
-
-def create_venv(folder_path: str, python_version: str) -> str:
-    """
-    Create a virtual env for the new repository
-    :param folder_path: the path of the new repository
-    :param python_version: version of python to use for setup env
-    :return: venv path in success else raises an exception
-    """
-
-    venv_path = path.join(folder_path, '.venv')
-
-    run_command(f'python{python_version} -m venv {venv_path}', shell=True)
-
-    return venv_path
-
-
-def install_python_dependencies(folder_path: str, venv_path: str) -> None:
-    """
-    Install all dependencies for the new repository
-    :param folder_path: the path of the new repository
-    :param venv_path:the path of the new repository
-    :return:Nothing in case of success else raises an exception
-    """
-
-    venv_pip_path = venv_path + '/bin/pip3'
-
-    requirements_path = path.join(folder_path, 'requirements.txt')
-
-    if not path.isfile(venv_pip_path):
-        raise FileNotFoundError(venv_pip_path)
-
-    if not path.isfile(requirements_path):
-        raise FileNotFoundError(requirements_path)
-
-    run_command(f'{venv_pip_path} install -r {requirements_path}', shell=True)
 
 
 def save_repository_in_dir(dest_path: str, repository_name: str) -> str:
@@ -97,10 +59,6 @@ def add_repository(username: str, token: str, repository_name: str, dest: str, p
     clone_repository(username, token, repository_name)
 
     folder_path = save_repository_in_dir(dest, repository_name)
-
-    venv_path = create_venv(folder_path, python_version)
-
-    install_python_dependencies(folder_path, venv_path)
 
     repository_name = folder_path.split('/')[-1]
 

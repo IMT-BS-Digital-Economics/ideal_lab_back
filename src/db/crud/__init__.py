@@ -12,3 +12,4 @@
 from src.db.crud.items import *
 from src.db.crud.users import *
 from src.db.crud.reports import *
+from src.db.crud.projects import *

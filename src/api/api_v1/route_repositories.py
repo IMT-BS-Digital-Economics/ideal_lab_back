@@ -74,12 +74,12 @@ async def get_repositories_potential_executable(project_name: str,
 
 
 @router_repositories.post("/clone", dependencies=[Depends(cookie)])
-async def clone_repo(clone_data: schemas.project_clone, session_data: schemas.SessionData = Depends(verifier),
+async def clone_repo(clone_data: schemas.repository_clone, session_data: schemas.SessionData = Depends(verifier),
                      db: Session = Depends(get_db)):
     verified_session(db, session_data)
 
     try:
-        message = add_repository(clone_data.user, clone_data.token, clone_data.project, config['SCRIPT_DIR'], clone_data.version)
+        message = add_repository(clone_data.user, clone_data.token, clone_data.repository, config['SCRIPT_DIR'], clone_data.version)
     except InvalidCommand as e:
         raise HTTPException(
             status_code=400,

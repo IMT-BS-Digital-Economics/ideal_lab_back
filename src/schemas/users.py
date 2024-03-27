@@ -14,6 +14,7 @@ from typing import Union
 from pydantic import BaseModel
 
 from src.schemas.items import Item
+from src.schemas.projects import Project
 
 
 class UserBase(BaseModel):
@@ -49,6 +50,7 @@ class User(UserBase):
     is_verified: Union[bool, None] = None
     username: Union[str, None] = None
     items: list[Item] = []
+    projects: list[Project] = []
     role: Union[str, None] = None
 
     class Config:

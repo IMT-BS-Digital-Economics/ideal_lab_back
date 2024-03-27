@@ -12,3 +12,4 @@
 from src.db.models.items import *
 from src.db.models.users import *
 from src.db.models.reports import *
+from src.db.models.project import *

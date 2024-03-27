@@ -27,3 +27,4 @@ class User(Base):
     role = Column(String, default="basic_access")
 
     items = relationship("Item", back_populates="owner")
+    projects = relationship("Project", back_populates="owner")

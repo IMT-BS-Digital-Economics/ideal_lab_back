@@ -12,12 +12,12 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-class project_clone(BaseModel):
+class repository_clone(BaseModel):
     user: str
     token: str
-    project: str
+    repository: str
     version: str
 
-class project_user(BaseModel):
+class repository_user(BaseModel):
     user: str
     token: str
