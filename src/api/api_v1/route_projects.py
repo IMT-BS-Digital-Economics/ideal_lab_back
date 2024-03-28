@@ -9,6 +9,8 @@
 
 """
 
+from traceback import format_exc
+
 from os import listdir
 from os.path import isfile
 
@@ -19,7 +21,7 @@ from fastapi import APIRouter, HTTPException, Depends, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 
 from src.core.auth.auth_handler import verified_session
-from src.core.projects.handle_process import load_project_process
+from src.core.projects.handle_process import load_project_process, ProcessError
 from src.core.projects.handle_project_environment import EnvVar, add_environment_variable, update_environment_variable, \
     del_environment_variable, get_environment_variables
 from src.core.projects.project_creation import create_project_dir, create_dir_in_project
@@ -150,13 +152,20 @@ async def update_status(
 
     project_process = load_project_process(unique_id)
 
-    if status == 'off':
-        project_process.turn_off_process()
-    if status == 'running':
-        project = crud.get_project_by_unique_id(db, unique_id, user.id)
-        project_process.start_process(project.executable, project.arguments)
-    if status == 'stopped':
-        project_process.stop_process()
+    try:
+        if status == 'off':
+            status = project_process.turn_off_process()
+        if status == 'running':
+            project = crud.get_project_by_unique_id(db, unique_id, user.id)
+            status = project_process.start_process(project.executable, project.arguments)
+        if status == 'stopped':
+            status = project_process.stop_process()
+        if status == 'restart':
+            status = project_process.restart_process()
+    except ProcessError as exc:
+        return {'error': str(exc)}
+
+    return {'detail': status.value}
 
 
 @router_project.get('/{unique_id}/status', dependencies=[Depends(cookie)])

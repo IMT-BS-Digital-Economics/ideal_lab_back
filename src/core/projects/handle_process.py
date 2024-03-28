@@ -10,6 +10,7 @@
 """
 from datetime import datetime
 from os import kill, path
+from time import sleep
 
 from signal import SIGSTOP, SIGCONT, SIGTERM
 
@@ -24,6 +25,18 @@ from src.core.settings import config
 from src.core.utils.handle_system_execution import run_command
 
 
+def send_signal(process_id: int, signal: int):
+    """
+    Send signal to a desired process
+    :param process_id: process id of the process to kill
+    :param signal: signal to send to the process
+    :return: nothing in case of success
+    """
+
+    if process_id != -1:
+        kill(process_id, signal)
+
+
 class ProcessError(Exception):
     """Throw when a process is occuring an error"""
 
@@ -33,6 +46,7 @@ class Status(Enum):
     running = "Operational"
     stopped = "Manually stopped"
     fail = "Failure Detected"
+    zombie = "Zombie Detected"
     not_setup_yet = "Not Setup yet"
 
     @staticmethod
@@ -78,9 +92,7 @@ class ProjectProcess:
         if current_status != Status.stopped:
             raise ProcessError(f'Something went wrong cannot restart: {current_status.value}')
 
-        kill(self.process_id, SIGCONT)
-
-        return self.get_process_status()
+        return Status.from_string('running')
 
     def start_process(self, executable: str, arguments: list):
         """
@@ -110,7 +122,7 @@ class ProjectProcess:
             self.process_id = process.pid
             pid_file.write(str(self.process_id))
 
-        return self.get_process_status()
+        return Status.from_string('running')
 
     def stop_process(self):
         """
@@ -122,9 +134,9 @@ class ProjectProcess:
         if current_status != Status.running:
             raise ProcessError(f'Something went wrong cannot stop: {current_status.value}')
 
-        kill(self.process_id, SIGSTOP)
+        send_signal(self.process_id, SIGSTOP)
 
-        return self.get_process_status()
+        return Status.from_string('stopped')
 
     def turn_off_process(self, failed=False, zombie=False):
         """
@@ -133,10 +145,15 @@ class ProjectProcess:
         zombie: if process is in zombie stat
         :return: status
         """
+
+        print(f'In when crash {self.process_id}')
+
         if not failed:
-            kill(self.process_id, SIGTERM)
+            send_signal(self.process_id, SIGTERM)
 
         self.process_id = -1
+
+        print(zombie)
 
         if not zombie:
             pid_path = f'{self.folder_path}/pid'
@@ -144,7 +161,7 @@ class ProjectProcess:
             if path.isfile(pid_path):
                 run_command(f'rm -rf {pid_path}', shell=True)
 
-        return self.get_process_status()
+        return Status.from_string('off')
 
     def get_process_status(self) -> Status:
         """
@@ -153,6 +170,7 @@ class ProjectProcess:
         """
         try:
             process = Process(self.process_id)
+            current_status = process.status()
         except (NoSuchProcess, ValueError):
             if not path.isfile(f'{self.folder_path}/pid'):
                 return Status.off
@@ -160,10 +178,10 @@ class ProjectProcess:
                 self.turn_off_process(failed=True)
                 return Status.fail
 
-        if process.status() == "zombie":
+        if current_status == "zombie":
             self.turn_off_process(zombie=True)
 
-        return Status.from_string(process.status())
+        return Status.from_string(current_status)
 
 
 def load_project_process(unique_id: str) -> ProjectProcess:
