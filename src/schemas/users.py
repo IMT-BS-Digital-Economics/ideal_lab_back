@@ -49,8 +49,6 @@ class User(UserBase):
     id: Union[int, None] = None
     is_verified: Union[bool, None] = None
     username: Union[str, None] = None
-    items: list[Item] = []
-    projects: list[Project] = []
     role: Union[str, None] = None
 
     class Config:
