@@ -34,9 +34,24 @@ class ProjectCreate(BaseModel):
     executable: str
 
 
+class ProjectUpdate(ProjectBase):
+    unique_id: Union[str, None] = None
+    title: Union[str, None] = None
+    description: Union[str, None] = None
+    arguments: list = []
+    executable: Union[str, None] = None
+    status: Union[str, None] = None
+    start_time: Union[datetime, None] = None
+    auto_launch: Union[bool, None] = None
+
+
 class ProjectSetup(BaseModel):
     arguments: list
     start_time: datetime
+
+
+class ProjectCreateDirectory(BaseModel):
+    path: str
 
 
 class Project(ProjectBase):

@@ -25,10 +25,11 @@ from src.core.projects.handle_process import load_project_process, ProcessError
 from src.core.projects.handle_project_environment import EnvVar, add_environment_variable, update_environment_variable, \
     del_environment_variable, get_environment_variables
 from src.core.projects.project_creation import create_project_dir, create_dir_in_project
+from src.core.projects.update import check_parameter, edit_parameter
 from src.core.projects.upload_file import upload_file
 from src.core.projects.worker import monitoring_time_worker
 from src.schemas import SessionData, Project
-from src.schemas.projects import ProjectCreate, ProjectSetup
+from src.schemas.projects import ProjectCreate, ProjectSetup, ProjectCreateDirectory, ProjectUpdate
 from src.core.auth.session_handler import verifier, cookie
 from src.db.database import get_db
 from src.db import crud
@@ -73,6 +74,16 @@ async def get_project(
     user = verified_session(db, session_data)
 
     return crud.get_project_by_unique_id(db, unique_id, user.id)
+
+
+@router_project.get('/', dependencies=[Depends(cookie)])
+async def get_projects(
+        session_data: SessionData = Depends(verifier),
+        db: Session = Depends(get_db)
+):
+    user = verified_session(db, session_data)
+
+    return {'details': crud.get_projects(db)}
 
 
 @router_project.post('/{unique_id}/setup', dependencies=[Depends(cookie)])
@@ -165,7 +176,7 @@ async def update_status(
     except ProcessError as exc:
         return {'error': str(exc)}
 
-    return {'detail': status.value}
+    return {'message': status.value}
 
 
 @router_project.get('/{unique_id}/status', dependencies=[Depends(cookie)])
@@ -203,18 +214,18 @@ async def launch_worker(
     return project
 
 
-@router_project.post('/{unique_id}/directory/{directory_name}', dependencies=[Depends(cookie)])
+@router_project.post('/{unique_id}/directory', dependencies=[Depends(cookie)])
 async def create_directory(
         unique_id: str,
-        directory_name: str,
+        directory_information: ProjectCreateDirectory,
         session_data: SessionData = Depends(verifier),
         db: Session = Depends(get_db)
 ):
     verified_session(db, session_data)
 
-    create_dir_in_project(directory_name, unique_id)
+    create_dir_in_project(directory_information.path, unique_id)
 
-    return {'detail': f'Directory {directory_name} created successfully'}
+    return {'message': f'Directory {directory_information.path} created successfully'}
 
 
 @router_project.post("/{unique_id}/upload/", dependencies=[Depends(cookie)])
@@ -227,9 +238,9 @@ async def upload(
 ):
     verified_session(db, session_data)
 
-    print(file.filename)
-
     await upload_file(unique_id, file, path)
+
+    return {'message': f'Your file has been uploaded'}
 
 
 @router_project.get("/{unique_id}/logs", dependencies=[Depends(cookie)])
@@ -242,7 +253,7 @@ async def get_logs_files(
 
     project_process = load_project_process(unique_id)
 
-    return [file.replace('.txt', '') for file in list(f'{project_process.folder_path}/logs') if isfile(file)]
+    return [file.replace('.txt', '') for file in listdir(f'{project_process.folder_path}/logs') if isfile(f'{project_process.folder_path}/logs/{file}')]
 
 
 @router_project.get("/{unique_id}/log/{log_file}", dependencies=[Depends(cookie)])
@@ -259,7 +270,37 @@ async def get_logs(
     with open(f'{project_process.folder_path}/logs/{log_file}.txt', "r") as file:
         content = file.readlines()
 
-    return {'data': content}
+    return {'details': content}
+
+
+@router_project.post("/{unique_id}/update/{parameter}", dependencies=[Depends(cookie)])
+def update_project(
+        updated_project: ProjectUpdate,
+        unique_id: str,
+        parameter: str,
+        session_data: SessionData = Depends(verifier),
+        db: Session = Depends(get_db)
+):
+    db_user = verified_session(db, session_data)
+
+    check_parameter(parameter)
+
+    project = crud.get_project_by_unique_id(db, unique_id, db_user.id)
+
+    if project:
+        if eval(f'updated_project.{parameter}') is None:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Parameter key is different from {parameter}"
+            )
+
+        return edit_parameter(db, project, parameter, eval(f'updated_project.{parameter}'))
+
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Item not found with id: {unique_id}"
+        )
 
 
 
