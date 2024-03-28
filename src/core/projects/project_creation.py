@@ -90,12 +90,6 @@ def create_dir_in_project(directory_name: str, unique_id: str):
     if not path.isdir(code_path):
         raise ModuleNotFoundError(f'The project name {unique_id} not found')
 
-    if '/' in directory_name:
-        raise InvalidNameError(f'The directory {directory_name} is invalid')
-
-    if path.isdir({code_path}/{directory_name}):
-        raise IsADirectoryError(f'The directory {directory_name} already exist')
-
-    run_command(f"mkdir {code_path}/{directory_name}")
+    run_command(f"mkdir -p {code_path}/{directory_name}")
 
 
