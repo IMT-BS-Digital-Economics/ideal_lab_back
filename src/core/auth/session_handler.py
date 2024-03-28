@@ -88,7 +88,7 @@ async def create_session(name: str, response: Response):
 
 async def del_session(response: Response, session_id: UUID = Depends(cookie)):
     try:
-        await src.delete(session_id)
+        await backend.delete(session_id)
         cookie.delete_from_response(response)
         return {"detail": "Session deleted"}
     except KeyError:
