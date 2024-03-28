@@ -22,7 +22,7 @@ from src import schemas
 from src.core.auth.auth_handler import verified_session
 from src.core.auth.session_handler import verifier, cookie
 from src.core.repositories.add_repository import add_repository
-from src.core.utils.handle_system_execution import InvalidCommand
+from src.core.utils.handle_system_execution import InvalidCommand, run_command
 from src.db.database import get_db
 
 from src.core.settings import config
@@ -44,13 +44,15 @@ async def get_repositories_available(session_data: schemas.SessionData = Depends
     if not path.isdir(config['SCRIPT_DIR']):
         os.system(f"mkdir {config['SCRIPT_DIR']}")
 
-    return listdir(config['SCRIPT_DIR'])
+    return [{'title': element} for element in listdir(config['SCRIPT_DIR'])]
 
 
 @router_repositories.get("/{project_name}", dependencies=[Depends(cookie)])
-async def get_repositories_potential_executable(project_name: str,
-                                                session_data: schemas.SessionData = Depends(verifier),
-                                                db: Session = Depends(get_db)):
+async def get_repositories_potential_executable(
+        project_name: str,
+        session_data: schemas.SessionData = Depends(verifier),
+        db: Session = Depends(get_db)
+):
     verified_session(db, session_data)
 
     dir_names: list = listdir(config['SCRIPT_DIR'])
@@ -74,8 +76,10 @@ async def get_repositories_potential_executable(project_name: str,
 
 
 @router_repositories.post("/clone", dependencies=[Depends(cookie)])
-async def clone_repo(clone_data: schemas.repository_clone, session_data: schemas.SessionData = Depends(verifier),
-                     db: Session = Depends(get_db)):
+async def clone_repo(
+        clone_data: schemas.repository_clone,
+        session_data: schemas.SessionData = Depends(verifier),
+        db: Session = Depends(get_db)):
     verified_session(db, session_data)
 
     try:
@@ -93,3 +97,21 @@ async def clone_repo(clone_data: schemas.repository_clone, session_data: schemas
         )
 
     return {'message': message}
+
+
+@router_repositories.delete("/{repository_name}", dependencies=[Depends(cookie)])
+async def delete_repository(
+        repository_name: str,
+        session_data: schemas.SessionData = Depends(verifier),
+        db: Session = Depends(get_db)
+):
+    verified_session(db, session_data)
+
+    repository_path = f"{config['SCRIPT_DIR']}/{repository_name}"
+
+    if not path.isdir(repository_path):
+        raise HTTPException(status_code=400, detail=f"Repository {repository_name} not found")
+
+    run_command(f'rm -rf {repository_path}')
+
+    return {'detail': f'Repository {repository_name} deleted'}
