@@ -36,4 +36,4 @@ def check_parameter(parameter):
 
 
 def edit_parameter(db: Session, project: ProjectBase, parameter: str, new_value: str):
-    update_parameters(db, project, parameter, new_value)
+    return update_parameters(db, project, parameter, new_value)

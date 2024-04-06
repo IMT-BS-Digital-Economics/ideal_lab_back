@@ -9,7 +9,7 @@
 
 """
 
-from sqlalchemy import Column, ForeignKey, Integer, String, PickleType, Boolean, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, PickleType, Boolean, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableList
 
@@ -28,7 +28,7 @@ class Project(Base):
     repository = Column(String, index=True)
     executable = Column(String, index=True)
     arguments = Column(MutableList.as_mutable(PickleType), default=[])
-    start_time = Column(DateTime, index=True, default=datetime.utcnow())
+    start_time = Column(Time, index=True, default=datetime.utcnow().time().replace(second=0, microsecond=0))
     auto_launch = Column(Boolean, index=True, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
 

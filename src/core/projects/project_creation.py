@@ -58,6 +58,22 @@ def install_python_dependencies(folder_path: str, venv_path: str) -> None:
     run_command(f'{venv_pip_path} install -r {requirements_path}', shell=True)
 
 
+def create_dir_in_project(directory_name: str, unique_id: str):
+    """
+    Create a directory inside the project code repository
+    :param directory_name: the name to be created
+    :param unique_id: unique id of the project
+    :return: Nothing in case of success
+    """
+
+    code_path = f"{config['PROJECT_DIR']}/{unique_id}/repository"
+
+    if not path.isdir(code_path):
+        raise ModuleNotFoundError(f'The project name {unique_id} not found')
+
+    run_command(f"mkdir -p {code_path}/{directory_name}")
+
+
 def create_project_dir(repository: str, unique_id: str):
     """
     Create a project directory based on the repository to use
@@ -75,21 +91,5 @@ def create_project_dir(repository: str, unique_id: str):
     venv_path = create_venv(code_path, "3.9")
 
     install_python_dependencies(code_path, venv_path)
-
-
-def create_dir_in_project(directory_name: str, unique_id: str):
-    """
-    Create a directory inside the project code repository
-    :param directory_name: the name to be created
-    :param unique_id: unique id of the project
-    :return: Nothing in case of success
-    """
-
-    code_path = f"{config['PROJECT_DIR']}/{unique_id}/repository"
-
-    if not path.isdir(code_path):
-        raise ModuleNotFoundError(f'The project name {unique_id} not found')
-
-    run_command(f"mkdir -p {code_path}/{directory_name}")
 
 

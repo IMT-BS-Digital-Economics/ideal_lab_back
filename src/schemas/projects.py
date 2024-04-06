@@ -9,7 +9,7 @@
 
 """
 
-from datetime import datetime
+from datetime import time
 
 from typing import Union, Optional
 
@@ -23,7 +23,7 @@ class ProjectBase(BaseModel):
     status: str
     arguments: list = []
     executable: str
-    start_time: datetime
+    start_time: time
     auto_launch: bool = False
 
 
@@ -41,13 +41,13 @@ class ProjectUpdate(ProjectBase):
     arguments: list = []
     executable: Union[str, None] = None
     status: Union[str, None] = None
-    start_time: Union[datetime, None] = None
+    start_time: Union[time, None] = None
     auto_launch: Union[bool, None] = None
 
 
 class ProjectSetup(BaseModel):
     arguments: list
-    start_time: datetime
+    start_time: time
 
 
 class ProjectCreateDirectory(BaseModel):

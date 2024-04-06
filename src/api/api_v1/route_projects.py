@@ -40,6 +40,7 @@ router_project = APIRouter()
 @router_project.post('/', dependencies=[Depends(cookie)])
 async def create_project(
         project: ProjectCreate,
+        background_tasks: BackgroundTasks,
         session_data: SessionData = Depends(verifier),
         db: Session = Depends(get_db)
 ):
@@ -49,7 +50,7 @@ async def create_project(
 
     crud.create_user_project(db, project, user.id, unique_id)
 
-    create_project_dir(project.repository, unique_id)
+    background_tasks.add_task(create_project_dir, project.repository, unique_id)
 
     return crud.get_project_by_unique_id(db, unique_id, user.id)
 
@@ -125,7 +126,7 @@ async def get_env_vars(
 ):
     verified_session(db, session_data)
 
-    return {f'data: {get_environment_variables(unique_id)}'}
+    return get_environment_variables(unique_id)
 
 
 @router_project.post('/{unique_id}/env/update', dependencies=[Depends(cookie)])
