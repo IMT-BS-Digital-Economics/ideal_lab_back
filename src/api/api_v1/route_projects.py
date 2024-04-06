@@ -58,13 +58,15 @@ async def create_project(
 @router_project.delete('/{unique_id}', dependencies=[Depends(cookie)])
 async def delete_project(
         unique_id: str,
+        background_tasks: BackgroundTasks,
         session_data: SessionData = Depends(verifier),
         db: Session = Depends(get_db)
 ):
     user = verified_session(db, session_data)
 
-    return crud.del_project(db, unique_id, user.id)
+    background_tasks.add_task(crud.del_project, db, unique_id, user.id)
 
+    return {'message': f'Project {unique_id} deleted'}
 
 @router_project.get('/{unique_id}', dependencies=[Depends(cookie)])
 async def get_project(
@@ -126,7 +128,10 @@ async def get_env_vars(
 ):
     verified_session(db, session_data)
 
-    return get_environment_variables(unique_id)
+    try:
+        env_vars = get_environment_variables(unique_id)
+    except FileNotFoundError:
+        return []
 
 
 @router_project.post('/{unique_id}/env/update', dependencies=[Depends(cookie)])

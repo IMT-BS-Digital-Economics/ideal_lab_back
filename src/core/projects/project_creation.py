@@ -85,6 +85,7 @@ def create_project_dir(repository: str, unique_id: str):
     code_path = f"{config['PROJECT_DIR']}/{unique_id}/repository"
 
     run_command(f"mkdir -p {code_path}")
+    run_command(f"mkdir {config['PROJECT_DIR']}/{unique_id}/logs")
     run_command(f"cp -r {config['SCRIPT_DIR']}/{repository}/* {code_path}",
                 shell=True)
 
