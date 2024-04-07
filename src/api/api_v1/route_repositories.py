@@ -114,4 +114,4 @@ async def delete_repository(
 
     run_command(f'rm -rf {repository_path}')
 
-    return {'detail': f'Repository {repository_name} deleted'}
+    return {'message': f'Repository {repository_name} deleted'}
