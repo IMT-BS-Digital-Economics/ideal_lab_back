@@ -68,6 +68,7 @@ async def delete_project(
 
     return {'message': f'Project {unique_id} deleted'}
 
+
 @router_project.get('/{unique_id}', dependencies=[Depends(cookie)])
 async def get_project(
         unique_id: str,
@@ -117,7 +118,7 @@ async def add_env_var_to_project(
 
     add_environment_variable(unique_id, environment_variable)
 
-    return {'detail': f'Environment variable uploaded'}
+    return {'message': f'Environment variable uploaded'}
 
 
 @router_project.get('/{unique_id}/env/', dependencies=[Depends(cookie)])
@@ -154,7 +155,7 @@ async def delete_env_var(
         db: Session = Depends(get_db)
 ):
     verified_session(db, session_data)
-    
+
     return {f'message: we deleted this variable: {del_environment_variable(unique_id, environment_variable)}'}
 
 
@@ -259,7 +260,8 @@ async def get_logs_files(
 
     project_process = load_project_process(unique_id)
 
-    return [file.replace('.txt', '') for file in listdir(f'{project_process.folder_path}/logs') if isfile(f'{project_process.folder_path}/logs/{file}')]
+    return [file.replace('.txt', '') for file in listdir(f'{project_process.folder_path}/logs') if
+            isfile(f'{project_process.folder_path}/logs/{file}')]
 
 
 @router_project.get("/{unique_id}/log/{log_file}", dependencies=[Depends(cookie)])
@@ -307,11 +309,3 @@ def update_project(
             status_code=400,
             detail=f"Item not found with id: {unique_id}"
         )
-
-
-
-
-
-
-
-
