@@ -47,7 +47,8 @@ class Status(Enum):
     stopped = "Manually stopped"
     fail = "Failure Detected"
     zombie = "Zombie Detected"
-    not_setup_yet = "Not Setup yet"
+    creating = "Creating project"
+    ready = "Ready to launch"
 
     @staticmethod
     def from_string(status_string: str):

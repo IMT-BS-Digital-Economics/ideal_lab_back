@@ -11,6 +11,8 @@
 
 from traceback import format_exc
 
+from datetime import datetime
+
 from os import listdir
 from os.path import isfile
 
@@ -21,7 +23,7 @@ from fastapi import APIRouter, HTTPException, Depends, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 
 from src.core.auth.auth_handler import verified_session
-from src.core.projects.handle_process import load_project_process, ProcessError
+from src.core.projects.handle_process import load_project_process, ProcessError, Status
 from src.core.projects.handle_project_environment import EnvVar, add_environment_variable, update_environment_variable, \
     del_environment_variable, get_environment_variables
 from src.core.projects.project_creation import create_project_dir, create_dir_in_project
@@ -50,9 +52,11 @@ async def create_project(
 
     crud.create_user_project(db, project, user.id, unique_id)
 
-    background_tasks.add_task(create_project_dir, project.repository, unique_id)
+    db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
-    return crud.get_project_by_unique_id(db, unique_id, user.id)
+    background_tasks.add_task(create_project_dir, project.repository, unique_id, db, db_project, user)
+
+    return db_project
 
 
 @router_project.delete('/{unique_id}', dependencies=[Depends(cookie)])
@@ -130,7 +134,7 @@ async def get_env_vars(
     verified_session(db, session_data)
 
     try:
-        env_vars = get_environment_variables(unique_id)
+        return get_environment_variables(unique_id)
     except FileNotFoundError:
         return []
 
@@ -170,6 +174,11 @@ async def update_status(
 
     project_process = load_project_process(unique_id)
 
+    db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
+
+    if db_project.status == Status.creating.value:
+        return {'detail': 'Please wait, project creation is still in progress'}
+
     try:
         if status == 'off':
             status = project_process.turn_off_process()
@@ -183,7 +192,7 @@ async def update_status(
     except ProcessError as exc:
         return {'error': str(exc)}
 
-    return {'message': status.value}
+    return crud.project_update_parameters(db, db_project, 'status', project_process.get_process_status().value)
 
 
 @router_project.get('/{unique_id}/status', dependencies=[Depends(cookie)])
@@ -192,11 +201,18 @@ async def get_status(
         session_data: SessionData = Depends(verifier),
         db: Session = Depends(get_db)
 ):
-    verified_session(db, session_data)
+    user = verified_session(db, session_data)
+
+    db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
     project_process = load_project_process(unique_id)
 
-    return {'status': project_process.get_process_status()}
+    if db_project.status == Status.creating.value:
+        return {'status': Status.creating.value}
+    elif db_project.status == Status.ready.value and project_process.get_process_status().value == Status.off.value:
+        return {'status': Status.ready.value}
+
+    return crud.project_update_parameters(db, db_project, 'status', project_process.get_process_status().value)
 
 
 @router_project.post('/{unique_id}/trigger/auto_launch', dependencies=[Depends(cookie)])
@@ -260,8 +276,20 @@ async def get_logs_files(
 
     project_process = load_project_process(unique_id)
 
-    return [file.replace('.txt', '') for file in listdir(f'{project_process.folder_path}/logs') if
-            isfile(f'{project_process.folder_path}/logs/{file}')]
+    log_files = [file.replace('.txt', '') for file in listdir(f'{project_process.folder_path}/logs') if
+                 isfile(f'{project_process.folder_path}/logs/{file}')]
+
+    def parse_datetime(output_string):
+        parts = output_string.replace('_', '-').split('-')
+        day = int(parts[1])
+        month = int(parts[2])
+        year = int(parts[3])
+        hour = int(parts[4])
+        minute = int(parts[5])
+        return datetime(year, month, day, hour, minute)
+
+    # Sorting the list
+    return sorted(log_files, key=parse_datetime, reverse=True)
 
 
 @router_project.get("/{unique_id}/log/{log_file}", dependencies=[Depends(cookie)])
@@ -275,10 +303,13 @@ async def get_logs(
 
     project_process = load_project_process(unique_id)
 
-    with open(f'{project_process.folder_path}/logs/{log_file}.txt', "r") as file:
-        content = file.readlines()
+    if not isfile(f'{project_process.folder_path}/logs/{log_file}.txt'):
+        return {'details': f'No logs found for {log_file}'}
 
-    return {'details': content}
+    with open(f'{project_process.folder_path}/logs/{log_file}.txt', "r") as file:
+        content = file.read().splitlines()
+
+    return {'details': [element.strip() for element in content if element.strip() != '']}
 
 
 @router_project.post("/{unique_id}/update/{parameter}", dependencies=[Depends(cookie)])

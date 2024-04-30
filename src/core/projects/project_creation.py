@@ -11,9 +11,13 @@
 
 from os import path
 
+from src.db.crud.projects.update import project_update_parameters
+
 from src.core.settings import config
 
 from src.core.utils.handle_system_execution import run_command
+
+from src.core.projects.handle_process import Status
 
 
 class InvalidNameError(Exception):
@@ -74,11 +78,14 @@ def create_dir_in_project(directory_name: str, unique_id: str):
     run_command(f"mkdir -p {code_path}/{directory_name}")
 
 
-def create_project_dir(repository: str, unique_id: str):
+def create_project_dir(repository: str, unique_id: str, db, db_project, user):
     """
     Create a project directory based on the repository to use
     :param repository: repository to be sued
     :param unique_id: unique id of the project
+    :param db: database connection
+    :param db_project: database project
+    :param user: user who created the project
     :return: Nothing in case of success
     """
 
@@ -92,5 +99,8 @@ def create_project_dir(repository: str, unique_id: str):
     venv_path = create_venv(code_path, "3.9")
 
     install_python_dependencies(code_path, venv_path)
+
+    project_update_parameters(db, db_project, 'status', Status.ready.value)
+
 
 

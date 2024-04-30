@@ -33,7 +33,7 @@ def create_user_project(db: Session, project: ProjectCreate, user_id: int, uniqu
         unique_id=unique_id,
         title=project.title,
         description=project.description,
-        status=Status.not_setup_yet.value,
+        status=Status.creating.value,
         repository=project.repository,
         executable=project.executable,
         owner_id=user_id
