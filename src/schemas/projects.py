@@ -9,8 +9,6 @@
 
 """
 
-from datetime import time
-
 from typing import Union, Optional
 
 from pydantic import BaseModel
@@ -23,7 +21,7 @@ class ProjectBase(BaseModel):
     status: str
     arguments: list = []
     executable: str
-    start_time: time
+    start_time: str
     auto_launch: bool = False
 
 
@@ -41,13 +39,13 @@ class ProjectUpdate(ProjectBase):
     arguments: list = []
     executable: Union[str, None] = None
     status: Union[str, None] = None
-    start_time: Union[time, None] = None
+    start_time: Union[str, None] = None
     auto_launch: Union[bool, None] = None
 
 
 class ProjectSetup(BaseModel):
     arguments: list
-    start_time: time
+    start_time: str
 
 
 class ProjectCreateDirectory(BaseModel):

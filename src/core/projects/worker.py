@@ -19,6 +19,14 @@ from src.core.projects.handle_process import ProjectProcess
 from src.db.crud import get_project_by_unique_id
 
 
+def convert_time_to_time_object(start_time):
+    dt_obj = datetime.strptime(start_time, '%H:%M')
+
+    dt_obj = datetime.combine(datetime.now().date(), dt_obj.time())
+
+    return dt_obj
+
+
 def monitoring_time_worker(unique_id: str, user_id, db) -> None:
     """
     Monitoring worker to start the project each day at the same hour
@@ -38,7 +46,8 @@ def monitoring_time_worker(unique_id: str, user_id, db) -> None:
         if not project.auto_launch:
             return
 
-        time_to_sleep = (datetime.now() - project.start_time).seconds
+        time_to_sleep = (convert_time_to_time_object(project.start_time) - datetime.now()).seconds
+        print(time_to_sleep)
         if time_to_sleep > 0:
             sleep(time_to_sleep)
 
