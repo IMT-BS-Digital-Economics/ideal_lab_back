@@ -38,7 +38,7 @@ def save_repository_in_dir(dest_path: str, repository_name: str) -> str:
 
     folder_path = f'{dest_path}/{repository_name}-{datetime.now().strftime("%d%m%Y%H%M%S")}'
 
-    run_command(f'mkdir {folder_path}')
+    run_command(f'mkdir -p {folder_path}')
     run_command(f'mv {repository_name}/* {folder_path}/', shell=True)
     run_command(f'rm -rf {repository_name}')
 
