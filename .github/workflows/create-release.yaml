@@ -1,4 +1,4 @@
-name: Create Frontend release
+name: Create Back Release
 
 on:
   push:
