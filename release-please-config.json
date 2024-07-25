@@ -1,0 +1,10 @@
+{
+    "release-type": "simple",
+    "tag-separator": "@",
+    "include-component-in-tag": false,
+    "packages": {
+      ".": {
+        "package-name": "ideal-lab-dashboard-back"
+      }
+    }
+  }
