@@ -1,0 +1,29 @@
+name: Create Back Release
+
+on:
+  push:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    name: Run release please action
+    outputs:
+      pr_release_created: ${{ steps.release.outputs.prs_created }}
+      upload_url: ${{ steps.release.outputs.upload_url }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Run release please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
