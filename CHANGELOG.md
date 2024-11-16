@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.2.0...v0.2.1) (2024-11-16)
+
+
+### Bug Fixes
+
+* add health route for kubernetes ([3ca2716](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/3ca2716993f457b07f6e54a46ca92a794ab831f0))
+* update path ([515aa88](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/515aa880631923ae15778d641f06b0b3c70c3fa7))
+
 ## [0.2.0](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.1.0...v0.2.0) (2024-07-25)
 
 
