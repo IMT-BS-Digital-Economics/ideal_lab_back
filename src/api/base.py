@@ -17,6 +17,7 @@ from src.api.api_v1 import route_users
 from src.api.api_v1 import route_repositories
 from src.api.api_v1 import route_admin
 from src.api.api_v1 import route_projects
+from src.api.api_v1 import route_health
 
 api_router = APIRouter()
 api_router.include_router(route_auth.router_auth, prefix="/auth", tags=["auth"])
@@ -25,3 +26,4 @@ api_router.include_router(route_items.router_items, prefix="/items", tags=["item
 api_router.include_router(route_repositories.router_repositories, prefix="/repositories", tags=["repositories"])
 api_router.include_router(route_admin.router_admin, prefix="/admin", tags=["admin"])
 api_router.include_router(route_projects.router_project, prefix='/projects', tags=["projects"])
+api_router.include_router(route_health.router_health, prefix='/health', tags=["health"])
