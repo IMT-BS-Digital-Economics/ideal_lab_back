@@ -29,7 +29,7 @@ def send_message(message):
 
 
 def send_mail(link: str, subject: str, catch_phrase: str, user_email: str):
-    f = open('backend/core/mailing/mail_template.html', 'r')
+    f = open('./src/core/mailing/mail_template.html', 'r')
 
     html_content = f.read().format(title=subject, catch_phrase=catch_phrase, link=f'{config["HOST"]}{link}')
 
