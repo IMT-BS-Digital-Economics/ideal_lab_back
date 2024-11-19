@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-back-config
+data:
+  HOST_PORT: "8000"
+  SUPER_ADMIN_USERNAME: "Brice"
+  SCRIPT_DIR: "/mnt/backend-results/Repositories"
+  PROJECT_DIR: "/mnt/backend-results/Projects"
