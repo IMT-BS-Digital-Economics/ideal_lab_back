@@ -29,7 +29,7 @@ def send_message(message):
 
 
 def send_mail(link: str, subject: str, catch_phrase: str, user_email: str):
-    f = open('./src/core/mailing/mail_template.html', 'r')
+    f = open('src/core/mailing/mail_template.html', 'r')
 
     html_content = f.read().format(title=subject, catch_phrase=catch_phrase, link=f'{config["HOST"]}{link}')
 
@@ -57,3 +57,9 @@ def send_reset_password_mail(user: User):
     catchphrase: str = 'Bonjour %s, Cliquez sur le lien ci-dessous afin de réinitialiser votre mot de passe' % user.username
 
     send_mail(link, "Réinitialiser votre mot de passe", catchphrase, user.email)
+
+
+def send_new_email(user: User):
+    catchphrase = f"Bonjour {user.username}, nous avons bien pris en compte le changement de votre email !"
+
+    send_mail('', 'Nouvelle email', catchphrase, user.email)

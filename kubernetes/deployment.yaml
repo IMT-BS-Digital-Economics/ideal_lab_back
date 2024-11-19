@@ -41,9 +41,14 @@ spec:
         volumeMounts:
           - name: results-volume
             mountPath: /app/results
+          - name: db-volume
+            mountPath: /app/db
       volumes:
         - name: results-volume
           persistentVolumeClaim:
             claimName: backend-results-pvc
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: db-pvc
       imagePullSecrets:
         - name: ghcr-secret

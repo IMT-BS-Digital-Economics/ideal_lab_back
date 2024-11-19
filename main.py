@@ -19,7 +19,7 @@ from src.api.base import api_router
 from src.db.database import engine, get_db_as_obj
 from src.db import models
 
-from src.db.crud import create_user, get_user_by_email
+from src.db.crud import create_user, get_user_by_email, get_user_by_username
 from src.schemas import UserCreate
 
 from src.core.admin.role_handler import change_user_role
@@ -42,7 +42,8 @@ def init_admin() -> int:
 
     db = get_db_as_obj()
 
-    if get_user_by_email(db, super_admin_email):
+    if get_user_by_email(db, super_admin_email) or get_user_by_username(db, super_admin_username):
+        print("Already created")
         return
 
     try:

@@ -14,7 +14,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./src/db/sql_app.db"
+from src.core.settings import config
+
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{config['DB_PATH']}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
