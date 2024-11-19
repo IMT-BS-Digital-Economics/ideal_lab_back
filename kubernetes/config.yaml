@@ -8,3 +8,4 @@ data:
   SUPER_ADMIN_USERNAME: "Brice"
   SCRIPT_DIR: "/mnt/backend-results/Repositories"
   PROJECT_DIR: "/mnt/backend-results/Projects"
+  DB_PATH: "../mtn/db"
