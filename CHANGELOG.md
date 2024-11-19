@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.2.1...v0.3.0) (2024-11-19)
+
+
+### Features
+
+* add kubernetes yaml ([af1af03](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/af1af038efdd04bfd3d66b0acbe0118cda571253))
+
 ## [0.2.1](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.2.0...v0.2.1) (2024-11-16)
 
 
