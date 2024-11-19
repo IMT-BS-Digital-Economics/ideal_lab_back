@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.1](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.0...v0.3.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* add persistent volume for db in Kube ([1c844ad](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/1c844ad3cae284e41821b0971c49036aabe95bf3))
+* database location storage ([9c7e389](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/9c7e389d48aac5d8c3db50abcbdb38397946cc90))
+* issue when chief admin has changed email ([7f3750c](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/7f3750c0001f63c19c578ade186a03cb0a379c84))
+* issue with path and add new mail confirmation ([46c4c0e](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/46c4c0ea4902ae4a8a0bece486c9b46b078f279f))
+* output message format ([aaf280f](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/aaf280fab85184cb6ce648b72b8b2835d28a7155))
+* remove db ([69e168d](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/69e168daa0340b3d53b2016533d6fe2825dae4e0))
+
 ## [0.3.0](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.2.1...v0.3.0) (2024-11-19)
 
 
