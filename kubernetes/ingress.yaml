@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
+    nginx.ingress.kubernetes.io/session-cookie-name: "SESSION_AFFINITY"
+    nginx.ingress.kubernetes.io/session-cookie-path: "/api"
+spec:
+  tls:
+  - hosts:
+      - ideal-lab.fr
+    secretName: tls-secret
+  rules:
+  - host: ideal-lab.fr
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: dashboard-back-svc
+            port:
+              number: 8081
+  ingressClassName: nginx

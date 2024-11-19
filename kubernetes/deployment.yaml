@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-back-deployment
+  namespace: ns-dashboard
+  labels:
+    app.kubernetes.io/name: dashboard-back
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dashboard-back
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dashboard-back
+    spec:
+      containers:
+      - name: dashboard-back-app
+        image: ghcr.io/imt-bs-digital-economics/imt-bs-digital-economics/ideal_lab_back:v0.2.1
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+        envFrom:
+        - secretRef:
+            name: dashboard-back-secrets
+        - configMapRef:
+            name: dashboard-back-config
+        volumeMounts:
+          - name: results-volume
+            mountPath: /app/results
+      volumes:
+        - name: results-volume
+          persistentVolumeClaim:
+            claimName: backend-results-pvc
+      imagePullSecrets:
+        - name: ghcr-secret
