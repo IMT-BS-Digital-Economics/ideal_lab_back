@@ -31,8 +31,8 @@ def send_message(message):
 def send_mail(link: str, subject: str, catch_phrase: str, user_email: str):
     f = open('src/core/mailing/mail_template.html', 'r')
 
-    html_content = f.read().format(title=subject, catch_phrase=catch_phrase, link=f'{config["HOST"]}{link}')
-
+    html_content = f.read().format(catch_phrase=catch_phrase, link=f'{config["HOST"]}{link}')
+ 
     send_message(
         Mail(
             from_email=config['EMAIL'],
@@ -44,22 +44,22 @@ def send_mail(link: str, subject: str, catch_phrase: str, user_email: str):
 
 
 def send_verification_mail(user: User):
-    link: str = f'/user/verified/' + user.validation_token[88:]
+    link: str = f'/user/verify/' + user.validation_token[88:]
 
-    catchphrase: str = 'Bonjour %s, Cliquez sur le lien ci-dessous afin de vérifier votre compte' % user.username
+    catchphrase: str = f'To verify your account {user.username}, please click on the bouton below.'
 
-    send_mail(link, "Vérifier votre compte", catchphrase, user.email)
+    send_mail(link, "Verify your account", catchphrase, user.email)
 
 
 def send_reset_password_mail(user: User):
-    link: str = '/user/reset_password/' + user.validation_token[88:]
+    link: str = '/user/password/' + user.validation_token[88:]
 
-    catchphrase: str = 'Bonjour %s, Cliquez sur le lien ci-dessous afin de réinitialiser votre mot de passe' % user.username
+    catchphrase: str = f'To reset your password, please click on the bouton below.'
 
-    send_mail(link, "Réinitialiser votre mot de passe", catchphrase, user.email)
+    send_mail(link, "Reset your password", catchphrase, user.email)
 
 
 def send_new_email(user: User):
-    catchphrase = f"Bonjour {user.username}, nous avons bien pris en compte le changement de votre email !"
+    catchphrase = f"{user.username} your email has been updated."
 
-    send_mail('', 'Nouvelle email', catchphrase, user.email)
+    send_mail('', 'Updated email confirmed', catchphrase, user.email)
