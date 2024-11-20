@@ -37,10 +37,11 @@ def reset_user_pass(db: Session, token: str, user_new_pass: UserResetPass):
     if db_user:
         if user_new_pass.password == user_new_pass.confirm_password:
             db_user.validation_token = None
-            return update_password(db, db_user, new_password=user_new_pass.password)
-
+            update_password(db, db_user, new_password=user_new_pass.password)
+            return "Your password has been successfully updated."
         else:
-            return None
+            return "Please match password & confirm password."
+    return "Link is expired or not exist."
 
 
 def update_validation_token(db, db_user):
