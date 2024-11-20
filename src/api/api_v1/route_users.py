@@ -26,17 +26,17 @@ router_user = APIRouter()
 
 @router_user.get('/me', dependencies=[Depends(cookie)], response_model=User)
 async def me(session_data: SessionData = Depends(verifier), db: Session = Depends(get_db)):
-    return verified_session(db, session_data)
+    return verified_session(db, session_data, True)
 
 
 @router_user.get('/verified/{token}')
 async def verified(token: str, db: Session = Depends(get_db)):
-    db_user = verified_user(db, token)
+    db_user = verified_user(db, token);
 
     if not db_user:
         raise HTTPException(
-            status_code=400,
-            detail="This link has expired"
+            status_code=403,
+            detail="Invalid or expired token"
         )
 
     return {"message": f"Welcome {db_user.username} ! You are now an approved user !"}
@@ -73,13 +73,15 @@ async def forgot_password(email: UserMail, db: Session = Depends(get_db)):
 
 @router_user.post('/reset_password/{token}')
 async def reset_password(token: str, user_new_pass: UserResetPass, db: Session = Depends(get_db)):
-    if reset_user_pass(db, token, user_new_pass) is None:
+    response = reset_user_pass(db, token, user_new_pass)
+
+    if "successfully" not in response:
         raise HTTPException(
             status_code=400,
-            detail="This is a dead link"
+            detail=response
         )
 
-    return {"message": "Your password has been changed !"}
+    return {"message": response}
 
 
 @router_user.post('/reset_email', dependencies=[Depends(cookie)])

@@ -90,7 +90,7 @@ async def del_session(response: Response, session_id: UUID = Depends(cookie)):
     try:
         await backend.delete(session_id)
         cookie.delete_from_response(response)
-        return {"detail": "Session deleted"}
+        return {"message": "You have been signout with success"}
     except KeyError:
         raise HTTPException(
             status_code=400,
