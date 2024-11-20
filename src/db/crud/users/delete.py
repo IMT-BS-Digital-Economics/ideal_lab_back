@@ -18,4 +18,4 @@ def delete_user(db: Session, db_user: User) -> dict:
     db.delete(db_user)
     db.commit()
 
-    return {"detail": 'Success'}
+    return {"message": 'User has been deleted'}

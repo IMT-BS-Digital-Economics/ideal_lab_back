@@ -49,7 +49,7 @@ async def create_user(user: schemas.UserCreate, session_data: schemas.SessionDat
 
     crud.create_user(db, user)
 
-    return {"detail": f"An account has been created for {user.username}"}
+    return {"message": f"An account has been created for {user.username}"}
 
 
 @router_admin.post("/update_role", dependencies=[Depends(cookie)], response_model=User)

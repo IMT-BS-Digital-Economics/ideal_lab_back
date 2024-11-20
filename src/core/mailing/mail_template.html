@@ -1,25 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{title}</title>
+    <style>
+        body {{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }}
+        table {{
+            border-spacing: 0;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }}
+        img {{
+            border: none;
+            display: block;
+            max-width: 100%;
+        }}
+        a {{
+            color: #319795; /* Chakra UI's teal color */
+            text-decoration: none;
+        }}
+        .header {{
+            background-color: #319795;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }}
+        .header h1 {{
+            margin: 0;
+            font-size: 24px;
+        }}
+        .header p {{
+            margin: 0;
+            font-size: 14px;
+        }}
+        .button {{
+            background-color: #319795;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 10px 0;
+        }}
+        .content {{
+            padding: 20px;
+            text-align: left;
+        }}
+        .content p {{
+            margin: 10px 0;
+            line-height: 1.5;
+        }}
+        .content .catch-phrase {{
+            color: #319795; /* Teal color for catchphrase */
+            font-weight: bold;
+        }}
+        .footer {{
+            background-color: #2c7a7b; /* Slightly darker teal */
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }}
+        .footer p {{
+            margin: 5px 0;
+            font-size: 12px;
+        }}
+        .footer a {{
+            color: #81e6d9; /* Teal accent */
+        }}
+        @media screen and (max-width: 600px) {{
+            .content {{
+                padding: 10px;
+            }}
+            .button {{
+                padding: 8px 16px;
+                font-size: 12px;
+            }}
+        }}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="background-color: #ADF2FF">
-    <div>
-        <center>
-            <img 
-src="http://cdn.mcauto-images-production.sendgrid.net/60f77f06dea02af1/23d1e838-052c-4640-9c6f-b1e3aa56d9d5/1200x617.png" 
-alt="Logo IMT-BS" width="10%"/>
-        </center>
-        <div style="background-color: white; border-radius: 1%; height: 
-80%; width: 80% ;position: absolute; margin: 10%">
-            <h1 style="font-family: Arial;margin-left: 10%; margin-right: 
-10%; margin-top: 5%">{catch_phrase}</h1>
-            <a style="margin: 10%; font: bold 200% Arial; color: black; 
-text-decoration: none" href="{link}">
-                Cliquer ici
-            </a>
-        </div>
-    </div>
+<body>
+    <table>
+        <tr>
+            <td class="header">
+                <center>
+                </center>
+                <h1>Ideal Lab Dashboard</h1>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="content">
+                <h2>Welcome to Ideal Lab!</h2>
+                <p>
+                    We're thrilled to have you on board. Explore our features and 
+                    tools to make your ideas come to life.
+                </p>
+                <p class="catch-phrase">{catch_phrase}</p>
+                <p style="text-align: center;">
+                    <a href="{link}" class="button">Click here</a>
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="footer">
+                <p>© 2024 Ideal Lab Dashboard. All rights reserved.</p>
+                <p>
+                    Made with <span style="color: red;">♥</span> by Brice Toffolon.
+                    <br>
+                    <a href="https://ideal-lab.fr/about">About</a> | 
+                    <a href="https://ideal-lab.fr/contact">Contact</a>
+                </p>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
