@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.1...v0.3.2) (2024-11-20)
+
+
+### Bug Fixes
+
+* add new mail template, change message & resolve host missing variable ([59d065c](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/59d065c0a8150ada1aa3498e76d24dff17b1223b))
+* issue with output format & remove useless route /health ([c9e32e5](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/c9e32e51523b7c88f126beab5056c5412f0d38fa))
+
 ## [0.3.1](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.0...v0.3.1) (2024-11-19)
 
 
