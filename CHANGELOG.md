@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.3](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.2...v0.3.3) (2024-11-21)
+
+
+### Bug Fixes
+
+* CORS ([2a7c0f1](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/2a7c0f12a71a71a00e35b62c02ecc31e0457a396))
+* not updated function ([1b16f80](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/1b16f80b9554d16dff1ff04f4814b14e556d273b))
+
 ## [0.3.2](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.1...v0.3.2) (2024-11-20)
 
 
