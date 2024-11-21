@@ -60,6 +60,7 @@ def allow_origins(app):
     origins = [
         "http://localhost",
         "http://localhost:3000"
+        "https://ideal-lab.fr"
     ]
 
     app.add_middleware(
