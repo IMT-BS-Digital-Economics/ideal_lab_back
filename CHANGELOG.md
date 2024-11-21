@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.4...v0.3.5) (2024-11-21)
+
+
+### Bug Fixes
+
+* missing return value ([33e9fc8](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/33e9fc875a4b7fca958812a83337beb20d35fb6e))
+
 ## [0.3.4](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.3...v0.3.4) (2024-11-21)
 
 
