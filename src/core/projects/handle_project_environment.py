@@ -85,15 +85,15 @@ def update_environment_variable(unique_id: str, env_var: EnvVar):
 
     env_path = f"{config['PROJECT_DIR']}/{unique_id}/repository/.env"
 
-    variable = f'{env_var["key"]}={env_var.get("value")}'
+    new_variable = f'{env_var["key"]}={env_var.get("value")}'
 
     with open(env_path, 'r') as f:
-        env_variables = [variable for variable in f.readlines() if variable == variable]
+        env_variables = [variable for variable in f.readlines() if env_var["key"] == variable.split('=')[0]]
 
     if not env_variables:
         raise ValueError(f"Environment variable {env_var['key']} not found")
 
-    update_environment_file(env_path, env_variables[0], variable + '\n')
+    update_environment_file(env_path, env_variables[0], new_variable + '\n')
 
 
 def del_environment_variable(unique_id: str, env_var: EnvVar) -> str:
