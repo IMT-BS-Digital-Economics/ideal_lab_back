@@ -4,9 +4,9 @@ kind: ConfigMap
 metadata:
   name: dashboard-back-config
 data:
-  HOST: "ideal-lab.fr"
+  HOST: "https://ideal-lab.fr"
   HOST_PORT: "8000"
   SUPER_ADMIN_USERNAME: "Brice"
-  SCRIPT_DIR: "../results/Repositories"
-  PROJECT_DIR: "../results/Projects"
-  DB_PATH: "../db"
+  SCRIPT_DIR: "./results/Repositories"
+  PROJECT_DIR: "./results/Projects"
+  DB_PATH: "./db/sql_app.db"
