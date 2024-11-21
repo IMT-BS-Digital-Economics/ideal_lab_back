@@ -89,6 +89,8 @@ async def get_project(
     if not db_project:
         raise HTTPException(status_code=400, detail="Project not found")
     
+    return db_project
+    
 
 @router_project.get('/', dependencies=[Depends(cookie)])
 async def get_projects(
