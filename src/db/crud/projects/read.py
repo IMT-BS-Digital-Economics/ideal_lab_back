@@ -8,13 +8,11 @@
     About: 
 
 """
-from fastapi import HTTPException
-
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 
 from src.db.models import Project
-
+from src.db.models import User
 
 def get_projects(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Project).offset(skip).limit(limit).all()
@@ -28,4 +26,8 @@ def get_project_by_unique_id(db: Session, unique_id: str, owner_id: int) -> Proj
     try:
         return db.query(Project).filter(Project.unique_id == unique_id, Project.owner_id == owner_id).first()
     except NoResultFound:
-        raise HTTPException(status_code=400, detail="Project not found")
+        return None
+    
+
+def get_user_projects(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
+    return db.query(Project).filter(Project.owner_id == owner_id).limit(limit).all()

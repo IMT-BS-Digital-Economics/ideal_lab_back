@@ -21,6 +21,9 @@ def del_project(db: Session, unique_id: str, owner_id: int) -> dict:
     project = get_project_by_unique_id(db, unique_id, owner_id)
 
     if not project:
+        raise HTTPException(status_code=400, detail="Project not found")
+
+    if not project:
         raise HTTPException(
             status_code=400,
             detail=f"Project {unique_id} not found"
