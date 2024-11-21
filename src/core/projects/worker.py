@@ -40,6 +40,9 @@ def monitoring_time_worker(unique_id: str, user_id, db) -> None:
 
     project = get_project_by_unique_id(db, unique_id, user_id)
 
+    if not project:
+        return None
+
     while 1:
         db.refresh(project)
 

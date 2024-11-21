@@ -54,6 +54,9 @@ async def create_project(
 
     db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
+    if not db_project:
+        raise HTTPException(status_code=400, detail="Project not found")
+
     background_tasks.add_task(create_project_dir, project.repository, unique_id, db, db_project, user)
 
     return db_project
@@ -81,8 +84,11 @@ async def get_project(
 ):
     user = verified_session(db, session_data)
 
-    return crud.get_project_by_unique_id(db, unique_id, user.id)
+    db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
+    if not db_project:
+        raise HTTPException(status_code=400, detail="Project not found")
+    
 
 @router_project.get('/', dependencies=[Depends(cookie)])
 async def get_projects(
@@ -91,7 +97,7 @@ async def get_projects(
 ):
     user = verified_session(db, session_data)
 
-    return {'details': crud.get_projects(db)}
+    return {'details': crud.get_user_projects(db, user.id)}
 
 
 @router_project.post('/{unique_id}/setup', dependencies=[Depends(cookie)])
@@ -104,6 +110,9 @@ async def setup_project(
     user = verified_session(db, session_data)
 
     project = crud.get_project_by_unique_id(db, unique_id, user.id)
+
+    if not project:
+        raise HTTPException(status_code=400, detail="Project not found")
 
     crud.project_update_parameters(db, project, 'arguments', project_setup.arguments)
     crud.project_update_parameters(db, project, 'start_time', project_setup.start_time)
@@ -176,6 +185,9 @@ async def update_status(
 
     db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
+    if not db_project:
+        raise HTTPException(status_code=400, detail="Project not found")
+
     if db_project.status == Status.creating.value:
         return {'detail': 'Please wait, project creation is still in progress'}
 
@@ -184,6 +196,8 @@ async def update_status(
             status = project_process.turn_off_process()
         if status == 'running':
             project = crud.get_project_by_unique_id(db, unique_id, user.id)
+            if not project:
+                raise HTTPException(status_code=400, detail="Project not found")
             status = project_process.start_process(project.executable, project.arguments)
         if status == 'stopped':
             status = project_process.stop_process()
@@ -205,6 +219,9 @@ async def get_status(
 
     db_project = crud.get_project_by_unique_id(db, unique_id, user.id)
 
+    if not db_project:
+        raise HTTPException(status_code=400, detail="Project not found")
+
     project_process = load_project_process(unique_id)
 
     if db_project.status == Status.creating.value:
@@ -225,6 +242,9 @@ async def launch_worker(
     user = verified_session(db, session_data)
 
     project = crud.get_project_by_unique_id(db, unique_id, user.id)
+
+    if not project:
+        raise HTTPException(status_code=400, detail="Project not found")
 
     if project.auto_launch:
         crud.project_update_parameters(db, project, 'auto_launch', False)
@@ -325,6 +345,9 @@ def update_project(
     check_parameter(parameter)
 
     project = crud.get_project_by_unique_id(db, unique_id, db_user.id)
+
+    if not project:
+        raise HTTPException(status_code=400, detail="Project not found")
 
     if project:
         if eval(f'updated_project.{parameter}') is None:
