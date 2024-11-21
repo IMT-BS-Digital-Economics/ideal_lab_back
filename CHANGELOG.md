@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.6](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.5...v0.3.6) (2024-11-21)
+
+
+### Bug Fixes
+
+* environment update issue ([8fc5d77](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/8fc5d777ff2d41d197b4f373e2620172a15b22fd))
+
 ## [0.3.5](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.4...v0.3.5) (2024-11-21)
 
 
