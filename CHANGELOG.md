@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.3...v0.3.4) (2024-11-21)
+
+
+### Bug Fixes
+
+* user getting all projet & not raising errors ([ac3904f](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/ac3904fcf1c937318d92b8a486faf4803b2a7f00))
+
 ## [0.3.3](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.2...v0.3.3) (2024-11-21)
 
 
