@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.6...v0.3.7) (2024-11-22)
+
+
+### Bug Fixes
+
+* error for unknow process status ([2a82788](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/commit/2a827880b14be7ae9aea16d2e8c6fccadec06d50))
+
 ## [0.3.6](https://github.com/IMT-BS-Digital-Economics/ideal_lab_back/compare/v0.3.5...v0.3.6) (2024-11-21)
 
 
