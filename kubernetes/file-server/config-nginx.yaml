@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fileserver-nginx-conf
+data:
+  nginx-fileserver.conf: |
+    server {
+      listen 80 backlog=1024;
+      location /healthz {
+        access_log off;
+        return 200;
+      }
+      location /files/$UUID {
+        auth_basic "Restricted Access!"; 
+        auth_basic_user_file /creds/.htpasswd;
+        # since nginx & the file server are on the same pod,
+        # they can talk to each other through the loopback interface
+        rewrite ^/files/$UUID(/.*)?$ $1 break;
+        proxy_pass http://localhost:8002;
+      }
+    }

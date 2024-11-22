@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fileserver-ingress
+spec:
+  tls:
+  - hosts:
+      - ideal-lab.fr
+    secretName: tls-secret
+  rules:
+  - host: ideal-lab.fr
+    http:
+      paths:
+      - backend:
+          service:
+            name: fileserver-svc
+            port:
+              number: 80
+        path: /files/$UUID
+        pathType: Prefix
