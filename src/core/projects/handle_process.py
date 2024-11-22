@@ -49,6 +49,14 @@ class Status(Enum):
     zombie = "Zombie Detected"
     creating = "Creating project"
     ready = "Ready to launch"
+    sleeping = "Sleeping"
+    dead = "Dead"
+    waking = "Waking"
+    idle = "idle"
+    locked = "locked"
+    waiting = "waiting"
+    suspended = "suspended"
+    parked = "parked"
 
     @staticmethod
     def from_string(status_string: str):
