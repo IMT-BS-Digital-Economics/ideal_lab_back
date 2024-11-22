@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fileserver
+  namespace: ns-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fileserver
+  template:
+    metadata:
+      labels:
+        app: fileserver
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: nginx
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: nginx-config
+          readOnly: true
+        - mountPath: /creds
+          name: credentials
+          readOnly: true
+      - command:
+        - sh
+        - -c
+        - python -m http.server -d ${DIRECTORY:-} -b 0.0.0.0 ${PORT:-8002}
+        env:
+        - name: DIRECTORY
+          value: /data
+        image: python:3.10-alpine
+        name: fileserver
+        ports:
+        - containerPort: 8002
+          name: http
+        volumeMounts:
+        - mountPath: /data/my-app
+          name: my-app
+          readOnly: true
+      volumes:
+      - configMap:
+          name: fileserver-nginx-conf
+        name: nginx-config
+      - name: credentials
+        secret:
+          secretName: fileserver-secrets
+      - name: my-app
+        persistentVolumeClaim:
+          claimName: backend-results-pvc
